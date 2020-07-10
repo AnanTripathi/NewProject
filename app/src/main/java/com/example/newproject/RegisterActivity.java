@@ -12,6 +12,7 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,20 +27,20 @@ public class RegisterActivity extends AppCompatActivity {
     Button mRegisterBtn;
     ProgressDialog progressDialog;
     private FirebaseAuth mAuth;
+    TextView haveAccountTv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
+        mAuth = FirebaseAuth.getInstance();
         ActionBar actionBar=getSupportActionBar();
         actionBar.setTitle("Create Account");
-        mAuth = FirebaseAuth.getInstance();
-       // actionBar.setIcon(R.drawable.firebselogo);
         actionBar.setDisplayHomeAsUpEnabled(true);// go back to single level
-        //actionBar.setDisplayShowHomeEnabled(true);
+        actionBar.setDisplayShowHomeEnabled(true);
         mEmailEt=findViewById(R.id.emailEt);
         mPasswordEt=findViewById(R.id.passwordEt);
         mRegisterBtn=findViewById(R.id.registerBtn);
-
+        haveAccountTv=findViewById(R.id.have_accoutTv);
         progressDialog=new ProgressDialog(this);
         progressDialog.setMessage("Registering user.. ");
 
@@ -59,6 +60,13 @@ public class RegisterActivity extends AppCompatActivity {
             else{
                 registerUser(email,password);
             }
+            }
+        });
+        haveAccountTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(RegisterActivity.this,LoginActivity.class));
+                finish();
             }
         });
     }
@@ -94,5 +102,10 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
                 }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 
 }
