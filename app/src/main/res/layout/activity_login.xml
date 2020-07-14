@@ -73,7 +73,7 @@
         android:textColor="@color/colorBlack"
         android:layout_height="wrap_content"
         android:textAlignment="center"
-        android:id="@+id/dont_have_accoutTv"
+        android:id="@+id/dont_have_accountTv"
         android:text="Do not have an account? Register "
         android:layout_alignParentBottom="true"
         android:clickable="true"/>

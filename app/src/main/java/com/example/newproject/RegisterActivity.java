@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +20,10 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class RegisterActivity extends AppCompatActivity {
     EditText mEmailEt,mPasswordEt;
@@ -28,11 +31,18 @@ public class RegisterActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
     private FirebaseAuth mAuth;
     TextView haveAccountTv;
+    FirebaseDatabase database;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         mAuth = FirebaseAuth.getInstance();
+//
+//        FirebaseDatabase database = FirebaseDatabase.getInstance();
+//        DatabaseReference myRef = database.getReference("message");
+//
+//        myRef.setValue("Hello, World!");
+
         ActionBar actionBar=getSupportActionBar();
         actionBar.setTitle("Create Account");
         actionBar.setDisplayHomeAsUpEnabled(true);// go back to single level
@@ -81,8 +91,22 @@ public class RegisterActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             progressDialog.dismiss();
                             FirebaseUser user = mAuth.getCurrentUser();
+                            //get user email and uid from auth
+                            String email =user.getEmail();
+                            String uid=user.getUid();
+                            //store these in hashmap
+                            HashMap<Object,String> hashMap=new HashMap<>();
+                            hashMap.put("email",email);
+                            hashMap.put("uid",uid);
+                            hashMap.put("name","");
+                            hashMap.put("phone","");
+                            hashMap.put("image","");
+                           FirebaseDatabase database=FirebaseDatabase.getInstance();
+                           DatabaseReference reference=database.getReference().child("Users");
+                           reference.child(uid).setValue(hashMap);
+
                             Toast.makeText(RegisterActivity.this,"Registered..\n"+user.getEmail(),Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(RegisterActivity.this,ProfileActivity.class));
+                            startActivity(new Intent(RegisterActivity.this, DashboardActivity.class));
                             Toast.makeText(RegisterActivity.this, "hello", Toast.LENGTH_SHORT).show();
                             finish();
                         } else {
@@ -90,9 +114,6 @@ public class RegisterActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             Toast.makeText(RegisterActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-
-
-                        // ...
                     }
                 }}).addOnFailureListener(this, new OnFailureListener() {
             @Override

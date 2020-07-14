@@ -10,13 +10,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,12 +29,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import java.util.regex.PatternSyntaxException;
+import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 100;
@@ -68,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
         googleSignInButton.setSize(SignInButton.SIZE_STANDARD);
         mEmailEt=findViewById(R.id.emailEt);
         mPasswordEt=findViewById(R.id.passwordEt);
-        notHaveAccntTv=findViewById(R.id.dont_have_accoutTv);
+        notHaveAccntTv=findViewById(R.id.dont_have_accountTv);
         mLoginBtn=findViewById(R.id.loginBtn);
         progressDialog=new ProgressDialog(this);
         progressDialog.setMessage("Logging In.....");
@@ -169,7 +168,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             progressDialog.dismiss();
                             FirebaseUser user = mAuth.getCurrentUser();
-                            startActivity(new Intent(LoginActivity.this,ProfileActivity.class));
+                            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                             finish();
                         } else {
                             progressDialog.dismiss();
@@ -212,7 +211,22 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
-                            startActivity(new Intent(LoginActivity.this,ProfileActivity.class));
+
+                            //if user is signed in for the first time
+                            if(task.getResult().getAdditionalUserInfo().isNewUser()){
+                            String email =user.getEmail();
+                            String uid=user.getUid();
+                            //store these in hashmap
+                            HashMap<Object,String> hashMap=new HashMap<>();
+                            hashMap.put("email",email);
+                            hashMap.put("uid",uid);
+                            hashMap.put("name"," ");
+                            hashMap.put("phone"," ");
+                            hashMap.put("image"," ");
+                            FirebaseDatabase database=FirebaseDatabase.getInstance();
+                            DatabaseReference reference=database.getReference("Users");
+                            reference.child(uid).setValue(hashMap);}
+                            startActivity(new Intent(LoginActivity.this, DashboardActivity.class));
                             finish();
                         } else {
                             Toast.makeText(LoginActivity.this, "Authentication Failed."+task.getException(), Toast.LENGTH_SHORT).show();
