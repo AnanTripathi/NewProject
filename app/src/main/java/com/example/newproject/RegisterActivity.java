@@ -37,11 +37,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         mAuth = FirebaseAuth.getInstance();
-//
-//        FirebaseDatabase database = FirebaseDatabase.getInstance();
-//        DatabaseReference myRef = database.getReference("message");
-//
-//        myRef.setValue("Hello, World!");
 
         ActionBar actionBar=getSupportActionBar();
         actionBar.setTitle("Create Account");
@@ -101,6 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
                             hashMap.put("name","");
                             hashMap.put("phone","");
                             hashMap.put("image","");
+                            hashMap.put("cover","");
                            FirebaseDatabase database=FirebaseDatabase.getInstance();
                            DatabaseReference reference=database.getReference().child("Users");
                            reference.child(uid).setValue(hashMap);

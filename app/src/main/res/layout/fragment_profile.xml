@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ProfileFragment">
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
 
-
-        <RelativeLayout
+        <ImageView
+            android:id="@+id/coverIv"
             android:layout_width="match_parent"
             android:layout_height="180dp"
+            android:scaleType="fitXY"
             android:background="@color/colorPrimaryDark">
 
-        </RelativeLayout>
+        </ImageView>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="120dp"
@@ -26,7 +30,7 @@
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:id="@+id/avatarIv"
-            android:src="@drawable/ic_add_image_white"
+            android:src="@drawable/ic_default_image"
             android:layout_marginStart="20dp"
             android:background="@color/colorPrimary"
             android:padding="5dp"
@@ -63,6 +67,16 @@
                     android:layout_marginLeft="5dp"/>
             </LinearLayout>
         </LinearLayout>
-    </RelativeLayout>
 
-</ScrollView>
+    </RelativeLayout>
+    </ScrollView>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:id="@+id/fab"
+        android:src="@drawable/ic_edit_white"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="10dp"
+        android:layout_alignParentRight="true"/>
+</RelativeLayout>
