@@ -10,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -39,6 +40,7 @@ import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 100;
+    private static final String TAG = "LoginActivity";
     EditText mEmailEt,mPasswordEt;
     TextView notHaveAccntTv,forgotPassTv;
     Button mLoginBtn;
@@ -200,6 +202,8 @@ public class LoginActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately  Log.w(TAG, "Google sign in failed", e);
                 // ...
+                Log.e(TAG,""+e.getMessage());
+                Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -234,7 +238,8 @@ public class LoginActivity extends AppCompatActivity {
 
                         }
                     }
-                }).addOnFailureListener(this, new OnFailureListener() {
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Toast.makeText(LoginActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
